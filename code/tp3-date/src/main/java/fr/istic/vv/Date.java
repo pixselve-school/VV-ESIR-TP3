@@ -1,6 +1,18 @@
 package fr.istic.vv;
 
 class Date implements Comparable<Date> {
+  protected int getYear() {
+    return year;
+  }
+
+  protected int getMonth() {
+    return month;
+  }
+
+  protected int getDay() {
+    return day;
+  }
+
   private final int year;
   private final int month;
   private final int day;
@@ -30,6 +42,9 @@ class Date implements Comparable<Date> {
   }
 
   public static boolean isLeapYear(int year) {
+    if (year < 1) {
+      return false;
+    }
     return year % 4 == 0 && (year % 100 != 0 || year % 400 == 0);
   }
 
@@ -52,15 +67,32 @@ class Date implements Comparable<Date> {
     int previousDay = day - 1;
     int previousMonth = month;
     int previousYear = year;
-    if (!isValidDate(previousDay, previousMonth, previousYear)) {
+    if (previousDay < 1) {
       previousMonth = month - 1;
-      if (!isValidDate(previousDay, previousMonth, previousYear)) {
+      if (previousMonth < 1) {
         previousMonth = 12;
         previousYear = year - 1;
       }
-      previousDay = 31;
+      previousDay = getDaysInMonth(previousMonth, previousYear);
     }
     return new Date(previousDay, previousMonth, previousYear);
+  }
+
+  /**
+   * Get the number of days in a month
+   *
+   * @param month the month
+   * @param year  the year
+   * @return the number of days in the month
+   */
+  protected static int getDaysInMonth(int month, int year) {
+    if (month == 2) {
+      return isLeapYear(year) ? 29 : 28;
+    }
+    if (month == 4 || month == 6 || month == 9 || month == 11) {
+      return 30;
+    }
+    return 31;
   }
 
   public int compareTo(Date other) {
