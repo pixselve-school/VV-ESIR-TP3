@@ -96,6 +96,9 @@ class Date implements Comparable<Date> {
   }
 
   public int compareTo(Date other) {
+    if (other == null) {
+      throw new NullPointerException();
+    }
     if (year != other.year) {
       return year - other.year;
     }

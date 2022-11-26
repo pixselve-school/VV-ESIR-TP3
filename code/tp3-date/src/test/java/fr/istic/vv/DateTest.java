@@ -346,5 +346,11 @@ class DateTest {
       Date otherDate = new Date(2, 1, 2020);
       assertEquals(1, otherDate.compareTo(date));
     }
+
+    @Test
+    void null_date() {
+      Date date = new Date(1, 1, 2020);
+      assertThrows(NullPointerException.class, () -> date.compareTo(null));
+    }
   }
 }
