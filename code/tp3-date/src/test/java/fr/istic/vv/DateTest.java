@@ -329,7 +329,8 @@ class DateTest {
     @Test
     void same_date() {
       Date date = new Date(1, 1, 2020);
-      assertEquals(0, date.compareTo(date));
+      Date date2 = new Date(1, 1, 2020);
+      assertEquals(0, date.compareTo(date2));
     }
 
     @Test
