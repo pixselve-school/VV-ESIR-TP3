@@ -131,3 +131,41 @@ Les caractéristiques de cette méthode sont les suivantes :
 |---------------------------------------------------------|------------|-------|------------|
 | Relation de la date passée en paramètre avec notre date | supérieure | égale | inférieure |
 | Date passée en paramètre est null                       | oui        | non   |            |
+
+### 2. Logic Coverage
+
+Avec les tests suivants, on obtient une couverture de 96%.
+On peut voir que c'est la fonction `compareTo` que nous n'avons pas assez testé.
+On ajoute un cas où l'année est différente et un cas où le mois est différent.
+Avec ces deux cas, on obtient une couverture de 100%.
+
+### 4. Mutation Testing
+
+En l'état, on obtient un score de 91% de mutation. Analysons les mutations qui n'ont pas été tuées.
+
+![img_1.png](img_1.png)
+
+Ligne 27 de l'image ci-dessus, on a une mutation qui remplace la première comparaison par un `<=`.
+En effet, on ne teste pas le cas où une année est égale à 1. Après avoir ajouté ce cas, le mutant est tué.
+
+![img_2.png](img_2.png)
+
+Même chose ligne 45. La comparaison est remplacée par un `<=`.
+On ne teste pas le cas où l'année est égale à 1. Mais on a affaire à un mutant équivalent.
+Effectivement, l'année 1 n'est pas bissextile, la fonction renvoie donc `false`, la fonction d'origine et la fonction
+mutante renvoient la même valeur.
+
+On ne peut donc pas tuer ce mutant.
+
+Concernant les mutations ligne 7, on va décomposer la condition en plusieurs ifs pour voir ce qui ne fonctionne pas.
+
+Avec ça, on remarque que le cas où l'année est divisible par 4 et 100, mais pas par 400 n'est pas testé.
+On ajoute donc ce cas et tous les mutants sont tués.
+
+![img_3.png](img_3.png)
+
+Ligne 70, c'est aussi une comparaison qui est remplacée par un `<=`.
+On ne teste pas le cas où le jour est égal à 2 (`previousDay = day - 1`).
+Après avoir ajouté ce cas, le mutant est tué.
+
+Pour finir, il ne reste qu'un mutant non tué qui est un mutant équivalent. Cela équivaut à un score de 99%.

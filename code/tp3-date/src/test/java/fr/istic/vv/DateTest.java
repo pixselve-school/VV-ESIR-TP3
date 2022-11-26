@@ -84,6 +84,8 @@ class DateTest {
     void isValidDate_year() {
       assertTrue(Date.isValidDate(1, 1, 2019));
       assertTrue(Date.isValidDate(1, 1, 2020));
+      assertTrue(Date.isValidDate(1, 1, 1));
+
 
       assertFalse(Date.isValidDate(1, 1, 0));
       assertFalse(Date.isValidDate(1, 1, -1));
@@ -100,12 +102,18 @@ class DateTest {
     void isLeapYear() {
       assertTrue(Date.isLeapYear(2020));
       assertFalse(Date.isLeapYear(2019));
+      assertFalse(Date.isLeapYear(1));
     }
 
     @Test
     void invalidYear() {
       assertFalse(Date.isLeapYear(0));
       assertFalse(Date.isLeapYear(-1));
+    }
+
+    @Test
+    void modulo_4_and_100() {
+      assertTrue(Date.isLeapYear(2000));
     }
   }
 
@@ -213,6 +221,15 @@ class DateTest {
       Date previousDay = date.previousDate();
       assertEquals(28, previousDay.getDay());
       assertEquals(2, previousDay.getMonth());
+      assertEquals(2020, previousDay.getYear());
+    }
+
+    @Test
+    void previous_day_2() {
+      Date date = new Date(2, 3, 2020);
+      Date previousDay = date.previousDate();
+      assertEquals(1, previousDay.getDay());
+      assertEquals(3, previousDay.getMonth());
       assertEquals(2020, previousDay.getYear());
     }
 
@@ -344,6 +361,30 @@ class DateTest {
     void smaller() {
       Date date = new Date(1, 1, 2020);
       Date otherDate = new Date(2, 1, 2020);
+      assertEquals(1, otherDate.compareTo(date));
+    }
+    @Test
+    void greater_month() {
+      Date date = new Date(1, 1, 2020);
+      Date otherDate = new Date(1, 2, 2020);
+      assertEquals(-1, date.compareTo(otherDate));
+    }
+    @Test
+    void smaller_month() {
+      Date date = new Date(1, 1, 2020);
+      Date otherDate = new Date(1, 2, 2020);
+      assertEquals(1, otherDate.compareTo(date));
+    }
+    @Test
+    void greater_year() {
+      Date date = new Date(1, 1, 2020);
+      Date otherDate = new Date(1, 1, 2021);
+      assertEquals(-1, date.compareTo(otherDate));
+    }
+    @Test
+    void smaller_year() {
+      Date date = new Date(1, 1, 2020);
+      Date otherDate = new Date(1, 1, 2021);
       assertEquals(1, otherDate.compareTo(date));
     }
 
