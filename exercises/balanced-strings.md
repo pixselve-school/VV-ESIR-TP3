@@ -58,6 +58,10 @@ class StringUtilsTest {
 
 On obtient alors une couverture de 100% des lignes.
 
+### 3. Base choice coverage
+
+Nous n'avons pas de condition avec plus de deux opérateurs booléens.
+
 ### 4. Mutation score
 
 On obtient un score de 88% avec les tests précédents.

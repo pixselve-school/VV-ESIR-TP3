@@ -91,7 +91,10 @@ class DateTest {
       assertFalse(Date.isValidDate(1, 1, -1));
     }
 
-
+    @Test
+    void month_invalid_over() {
+      assertFalse(Date.isValidDate(1, 13, 1));
+    }
   }
 
 
@@ -111,9 +114,20 @@ class DateTest {
       assertFalse(Date.isLeapYear(-1));
     }
 
+
     @Test
-    void modulo_4_and_100() {
+    void modulo_4_and_100_400() {
       assertTrue(Date.isLeapYear(2000));
+    }
+
+    @Test
+    void modulo_4_only() {
+      assertTrue(Date.isLeapYear(2004));
+    }
+
+    @Test
+    void modulo_4_100_only() {
+      assertFalse(Date.isLeapYear(2100));
     }
   }
 

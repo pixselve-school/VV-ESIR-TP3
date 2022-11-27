@@ -139,6 +139,81 @@ On peut voir que c'est la fonction `compareTo` que nous n'avons pas assez testé
 On ajoute un cas où l'année est différente et un cas où le mois est différent.
 Avec ces deux cas, on obtient une couverture de 100%.
 
+### 3. Base Choice Coverage
+
+Ligne 37, dans la fonction `isValidDate`, nous avons la
+condition `(year < 1 || month < 1 || month > 12 || day < 1 || day > 31)`.
+
+| Cas de test numéro | `year < 1` | `month < 1` | `month > 12` | `day < 1` | `day > 31` | Résultat |
+|--------------------|------------|-------------|--------------|-----------|------------|----------|
+| 1                  | F          | F           | F            | F         | F          | F        |
+| 2                  | F          | F           | F            | F         | V          | V        |
+| 3                  | F          | F           | F            | V         | F          | V        |
+| 4                  | F          | F           | F            | V         | V          | V        |
+| 5                  | F          | F           | V            | F         | F          | V        |
+| 6                  | F          | F           | V            | F         | V          | V        |
+| 7                  | F          | F           | V            | V         | F          | V        |
+| 8                  | F          | F           | V            | V         | V          | V        |
+| 9                  | F          | V           | F            | F         | F          | V        |
+| 10                 | F          | V           | F            | F         | V          | V        |
+| 11                 | F          | V           | F            | V         | F          | V        |
+| 12                 | F          | V           | F            | V         | V          | V        |
+| 13                 | F          | V           | V            | F         | F          | V        |
+| 14                 | F          | V           | V            | F         | V          | V        |
+| 15                 | F          | V           | V            | V         | F          | V        |
+| 16                 | F          | V           | V            | V         | V          | V        |
+| 17                 | V          | F           | F            | F         | F          | V        |
+| 18                 | V          | F           | F            | F         | V          | V        |
+| 19                 | V          | F           | F            | V         | F          | V        |
+| 20                 | V          | F           | F            | V         | V          | V        |
+| 21                 | V          | F           | V            | F         | F          | V        |
+| 22                 | V          | F           | V            | F         | V          | V        |
+| 23                 | V          | F           | V            | V         | F          | V        |
+| 24                 | V          | F           | V            | V         | V          | V        |
+| 25                 | V          | V           | F            | F         | F          | V        |
+| 26                 | V          | V           | F            | F         | V          | V        |
+| 27                 | V          | V           | F            | V         | F          | V        |
+| 28                 | V          | V           | F            | V         | V          | V        |
+| 29                 | V          | V           | V            | F         | F          | V        |
+| 30                 | V          | V           | V            | F         | V          | V        |
+| 31                 | V          | V           | V            | V         | F          | V        |
+| 32                 | V          | V           | V            | V         | V          | V        |
+
+Il nous faut trouver au moins 6 (n + 1) cas de tests pour couvrir toutes les branches en sachant que chaque opération
+booléenne doit être évaluée une fois à `true` et une fois à `false` tout en
+ayant une influence sur le résultat final. Aussi, les deux cas couvrant une opération booléenne doivent avoir pour
+différence uniquement la valeur de l'opération booléenne.
+On choisit donc les cas de tests 1, 2, 3, 5, 9 et 17.
+
+On dispose déjà de tests couvrant le cas 1 (date valide), 2 et 3 (jour invalide), 9 (mois invalide) et 17 (année
+invalide).
+
+On ajoute donc les cas de tests 9 qui teste un mois supérieur à 12.
+
+---
+Maintenant pour la condition `year % 4 == 0 && (year % 100 != 0 || year % 400 == 0)`.
+
+| Cas de test numéro | `year % 4 == 0` | `year % 100 != 0` | `year % 400 == 0` | Résultat |
+|--------------------|-----------------|-------------------|-------------------|----------|
+| 1                  | F               | F                 | F                 | F        |
+| 2                  | F               | F                 | V                 | F        |
+| 3                  | F               | V                 | F                 | F        |
+| 4                  | F               | V                 | V                 | F        |
+| 5                  | V               | F                 | F                 | F        |
+| 6                  | V               | F                 | V                 | V        |
+| 7                  | V               | V                 | F                 | V        |
+| 8                  | V               | V                 | V                 | V        |
+
+On choisit les cas de tests (5, 6) pour la dernière condition, (6, 2) pour la première condition et (7, 5) pour la
+deuxième condition.
+On a donc les cas de tests 2, 5, 6 et 7.
+
+- Il est impossible de couvrir le cas 2, car on ne peut pas avoir `year % 4 != 0` et `year % 400 == 0` en même temps (
+  400 est divisible par 4).
+- 2100 est une année divisible par 4 et 100, mais pas par 400, elle couvre le cas 5 (on ajoute ce test)
+- 2000 est une année divisible par 4, 100 et 400, elle couvre le cas 6 (on ajoute ce test)
+- 2004 est une année divisible par 4, mais pas par 100 et 400, elle couvre le cas 7 (on ajoute ce test)
+
 ### 4. Mutation Testing
 
 En l'état, on obtient un score de 91% de mutation. Analysons les mutations qui n'ont pas été tuées.
@@ -148,19 +223,14 @@ En l'état, on obtient un score de 91% de mutation. Analysons les mutations qui 
 Ligne 27 de l'image ci-dessus, on a une mutation qui remplace la première comparaison par un `<=`.
 En effet, on ne teste pas le cas où une année est égale à 1. Après avoir ajouté ce cas, le mutant est tué.
 
-![img_2.png](img_2.png)
+![img_4.png](img_4.png)
 
 Même chose ligne 45. La comparaison est remplacée par un `<=`.
 On ne teste pas le cas où l'année est égale à 1. Mais on a affaire à un mutant équivalent.
 Effectivement, l'année 1 n'est pas bissextile, la fonction renvoie donc `false`, la fonction d'origine et la fonction
 mutante renvoient la même valeur.
 
-On ne peut donc pas tuer ce mutant.
-
-Concernant les mutations ligne 7, on va décomposer la condition en plusieurs ifs pour voir ce qui ne fonctionne pas.
-
-Avec ça, on remarque que le cas où l'année est divisible par 4 et 100, mais pas par 400 n'est pas testé.
-On ajoute donc ce cas et tous les mutants sont tués.
+On peut tout de même tuer ce mutant en modifiant la condition en remplaçant `year < 1` par `year <= 0`.
 
 ![img_3.png](img_3.png)
 
@@ -168,4 +238,4 @@ Ligne 70, c'est aussi une comparaison qui est remplacée par un `<=`.
 On ne teste pas le cas où le jour est égal à 2 (`previousDay = day - 1`).
 Après avoir ajouté ce cas, le mutant est tué.
 
-Pour finir, il ne reste qu'un mutant non tué qui est un mutant équivalent. Cela équivaut à un score de 99%.
+Pour finir, nous obtenons un score de 100% de mutation.
