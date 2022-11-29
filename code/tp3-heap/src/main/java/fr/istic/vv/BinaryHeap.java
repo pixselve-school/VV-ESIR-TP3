@@ -63,6 +63,9 @@ class BinaryHeap<T> {
    * @return the minimum object
    */
   public T peek() {
+    if (this.count() == 0) {
+      throw new java.util.NoSuchElementException();
+    }
     return heap.get(0);
   }
 
