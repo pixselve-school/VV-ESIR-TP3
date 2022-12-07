@@ -127,3 +127,40 @@ Avec cette configuration, on obtient une couverture de 100%.
 On n'a pas plus de 2 opérateurs booléens dans notre code, donc on n'a pas besoin de vérifier le base choice coverage.
 
 ### 4. Mutation Score
+
+Avec cette configuration, on obtient un score de 75%.
+
+![img_2.png](img_2.png)
+
+#### Ligne 34
+
+On remarque qu'on ne teste pas le cas où la méthode `this.minHeapify` est appelée après la suppression du premier élément de l'arbre.
+On ajoute donc un test avec un arbre impossible, mais petit et qui permet de tester ce cas.
+```mermaid
+flowchart
+3 --> 6
+3 --> 2
+2 --> 10
+```
+Dans ce cas-là, la méthode `minHeapify` est nécessaire pour rétablir l'ordre de l'arbre.
+Ce mutant est donc tué.
+
+#### Ligne 66
+
+Deux mutants survivent pour les conditions `i >= this.count()` et `j >= this.count()`
+qui deviennent `i > this.count()` et `j > this.count()`.
+
+On remarque que ces deux conditions sont inutiles, car elles sont déjà vérifiées dans les méthodes
+`get` et `set` de la classe `ArrayList`.
+
+Cette redondance à créer des mutants équivalents.
+
+On supprime donc ces deux conditions et ces deux mutants n'existent plus.
+
+#### Ligne 105
+
+C'est une fonction privée qui n'est pas testée, on ajoute donc un test pour la couvrir.
+
+#### Ligne 96
+
+

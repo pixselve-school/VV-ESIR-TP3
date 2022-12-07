@@ -63,9 +63,6 @@ class BinaryHeap<T> {
    * @param j the index of the second element
    */
   void swap(int i, int j) {
-    if (i < 0 || i >= this.count() || j < 0 || j >= this.count()) {
-      throw new IndexOutOfBoundsException();
-    }
     T tmp = this.heap.get(i);
     this.heap.set(i, this.heap.get(j));
     this.heap.set(j, tmp);
@@ -101,7 +98,7 @@ class BinaryHeap<T> {
 
   }
 
-  private int parent(int index) {
+  protected static int parent(int index) {
     return (index - 1) / 2;
   }
 
