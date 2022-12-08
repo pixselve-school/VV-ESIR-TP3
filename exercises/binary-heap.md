@@ -10,15 +10,15 @@ Implement a `BinaryHeap` class with the following interface:
 ```java
 class BinaryHeap<T> {
 
-  public BinaryHeap(Comparator<T> comparator) { ...}
+    public BinaryHeap(Comparator<T> comparator) { ...}
 
-  public T pop() { ...}
+    public T pop() { ...}
 
-  public T peek() { ...}
+    public T peek() { ...}
 
-  public void push(T element) { ...}
+    public void push(T element) { ...}
 
-  public int count() { ...}
+    public int count() { ...}
 
 }
 ```
@@ -77,13 +77,11 @@ Use the project in [tp3-heap](../code/tp3-heap) to complete this exercise.
 |-----------------|------|------|
 | Taille du tas   | <= 1 | \> 1 |
 
-
 #### count
 
 | Caractéristique | b1  | b2   |
 |-----------------|-----|------|
 | Taille du tas   | 0   | \>=1 |
-
 
 #### minHeapify
 
@@ -91,16 +89,19 @@ Use the project in [tp3-heap](../code/tp3-heap) to complete this exercise.
 |-----------------|----------|-----------|
 | Taille du tas   | \> index | \>= index |
 
-
 Pour cette méthode, on va avoir trois configurations d'arbres à tester :
+
 1. L'arbre est correct
+
 ```mermaid
 flowchart
 
 1 --> 3
 1 --> 6
 ```
+
 2. L'élément de gauche est plus petit
+
 ```mermaid
 flowchart
 
@@ -109,6 +110,7 @@ flowchart
 ```
 
 3. L'élément de droite est plus petit
+
 ```mermaid
 flowchart
 
@@ -134,14 +136,17 @@ Avec cette configuration, on obtient un score de 75%.
 
 #### Ligne 34
 
-On remarque qu'on ne teste pas le cas où la méthode `this.minHeapify` est appelée après la suppression du premier élément de l'arbre.
+On remarque qu'on ne teste pas le cas où la méthode `this.minHeapify` est appelée après la suppression du premier
+élément de l'arbre.
 On ajoute donc un test avec un arbre impossible, mais petit et qui permet de tester ce cas.
+
 ```mermaid
 flowchart
 3 --> 6
 3 --> 2
 2 --> 10
 ```
+
 Dans ce cas-là, la méthode `minHeapify` est nécessaire pour rétablir l'ordre de l'arbre.
 Ce mutant est donc tué.
 
@@ -163,4 +168,33 @@ C'est une fonction privée qui n'est pas testée, on ajoute donc un test pour la
 
 #### Ligne 96
 
+Concernant le mutant sur la condition `this.comparator.compare(this.heap.get(parent(index)), this.heap.get(index)) > 0`,
+nous avons ici un mutant équivalent car si on la transforme en `>=`, cela inclut les égalités, ce qui ne change pas le
+comportement du programme.
 
+Même chose pour la condition `index > 0`.
+Si `index = 0` et que la condition est `>=`, `parent(0) = 0` et donc on ne rentre pas dans la boucle car la comparaison
+de l'élément avec lui-même n'est pas `> 0`.
+Le comportement ne change ainsi pas.
+
+#### Ligne 34
+
+On développe un cas de test ou l'élément en tête d'arbre est plus grand que deux niveaux d'enfants.
+
+```mermaid
+flowchart
+6 --> 1
+6 --> 3
+
+1 --> 2
+```
+
+Alors, la méthode `minHeapify` doit être appelée récursivement pour rétablir l'ordre de l'arbre.
+Le mutant est tué.
+
+#### Ligne 51
+
+Nous avons ici des mutants équivalents qui touchent les
+comparaisons `this.comparator.compare(this.heap.get(right), this.heap.get(smallest)) < 0`
+et `this.comparator.compare(this.heap.get(left), this.heap.get(smallest)) < 0`.
+Si les `<` sont remplacés par des `<=`, cela inclut les égalités, ce qui ne change pas le comportement du programme.

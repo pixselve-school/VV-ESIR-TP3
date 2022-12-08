@@ -185,6 +185,14 @@ class BinaryHeapTest {
             heap.minHeapify(0);
             assertEquals(List.of(1, 6, 3), heap.heap);
         }
+
+        @Test
+        void leftAndRightSmaller() {
+            BinaryHeap<Integer> heap = new BinaryHeap<>(Integer::compareTo);
+            heap.heap = new ArrayList<>(List.of(6, 1, 3, 2));
+            heap.minHeapify(0);
+            assertEquals(List.of(1, 2, 3, 6), heap.heap);
+        }
     }
 
     @Nested
